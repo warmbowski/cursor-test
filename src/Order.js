@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Fragment } from "react";
+import { OrderForm } from './OrderForm';
 import { OrderContext } from './index';
 
 export class Item extends React.Component{
@@ -24,15 +25,16 @@ export class Item extends React.Component{
 };
 
 
-    export class Order extends React.Component{
-    render() {
+export const Order = () => {
 
-        return(
-            <OrderContext.Consumer>
-                {({ orderBinder }) => (
+    return(
+        <OrderContext.Consumer>
+            {({ orderBinder }) => (
+                <Fragment>
                     <div>{orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
-                )}
-            </OrderContext.Consumer>
-        );
-    }
+                    <OrderForm orderBinder={orderBinder} />
+                </Fragment>
+            )}
+        </OrderContext.Consumer>
+    );
 };

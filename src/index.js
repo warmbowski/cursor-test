@@ -18,7 +18,7 @@ class App extends React.Component {
         super(props);
         let orderBinder = createBinder(
             orderData,
-            (orderBinder) => {
+            orderBinder => {
                 this.setState({ orderBinder });
             }
         );
