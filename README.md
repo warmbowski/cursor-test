@@ -20,6 +20,7 @@ https://github.com/thi-ng/umbrella
 Todo:
 [] Fix Binder Meta Data on Inputs
 [] Try Derived Binders
+[] Switch to Typescript
 [] With fetched data
 [] With router
 [] With server side render
