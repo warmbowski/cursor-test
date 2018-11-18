@@ -14,14 +14,17 @@ const orderData = [
 export const OrderContext = React.createContext();
 
 class App extends React.Component {
-    state = {
-        orderBinder: createBinder(
+    constructor(props) {
+        super(props);
+        let orderBinder = createBinder(
             orderData,
             (orderBinder) => {
                 this.setState({ orderBinder });
             }
-        )
-    };
+        );
+
+        this.state = { orderBinder };
+    }
 
     render() {
         return (
