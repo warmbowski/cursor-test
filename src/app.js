@@ -1,8 +1,7 @@
 import React from "react";
-import {createBinder} from 'immutable-binder';
+import { OrderContext } from './index';
 
 export class Item extends React.Component{
-
     increase = () => {
         var quantity = this.props.item.quantity.getValue();
         this.props.item.quantity.setValue(quantity + 1);
@@ -22,25 +21,18 @@ export class Item extends React.Component{
         </div>
         );
     }
-    };
+};
+
 
     export class Order extends React.Component{
-    constructor(props) {
-        super(props);
-        this.state = { 
-            orderBinder: createBinder(props.order, this.handleChange)
-        };
-    }
-    
-    handleChange = (newRootBinder) => {
-        this.setState({ orderBinder: newRootBinder });
-    }
-
     render() {
-        var items = this.state.orderBinder.map((item, idx) => <Item key={idx} item={item} />);
 
         return(
-        <div>{items}</div>
+            <OrderContext.Consumer>
+                {({ orderBinder }) => (
+                    <div>{orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
+                )}
+            </OrderContext.Consumer>
         );
     }
 };

@@ -1,25 +1,38 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
+import { createBinder } from 'immutable-binder';
 
 import { Order } from "./app";
 
-var orderData = [
+const orderData = [
     {name: "Burger", quantity: 2, price: 5.0},
     {name: "Salad", quantity: 1, price: 4.50},
     {name: "Coke", quantity: 3, price: 1.50}
 ];
 
 
-class HelloMessage extends React.Component {
-  render() {
-      return <div>
-          <div className="container">
-              <h1>Hello {this.props.name}</h1>
-          </div>
-          <Order order={orderData} />
-      </div>
-  }
+export const OrderContext = React.createContext();
+
+class App extends React.Component {
+    state = {
+        orderBinder: createBinder(
+            orderData,
+            (orderBinder) => {
+                this.setState({ orderBinder });
+            }
+        )
+    };
+
+    render() {
+        return (
+            <OrderContext.Provider value={ this.state }>
+                <section>
+                    <h1>Your Order:</h1>
+                    <Order />
+                </section>
+            </OrderContext.Provider>
+        )
+    }
 }
 
-ReactDOM.render(<HelloMessage name="Warmbowski" />, document.getElementById("app"));
+ReactDOM.render(<App />, document.getElementById("app"));
