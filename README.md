@@ -3,6 +3,7 @@
 
 Replacing Redux with the new React context API
 https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c
+https://auth0.com/blog/react-context-api-managing-state-with-ease/
 https://github.com/didierfranc/react-waterfall
 
 
@@ -18,4 +19,5 @@ https://github.com/thi-ng/umbrella
 
 Todo:
 [] With fetched data
+[] With router
 [] With server side render
