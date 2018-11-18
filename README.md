@@ -20,9 +20,9 @@ Other Cursor Libs to Try Out (that seem to be somewhat maintained)
 Todo:
 - [x] Set up Share app state using Context API
 - [x] Use Cursors in state
-- [] Fix Binder Meta Data on Inputs
-- [] Try Derived Binders
-- [] Switch to Typescript
-- [] With fetched data
-- [] With router
-- [] With server side render
+- [ ] Fix Binder Meta Data on Inputs
+- [ ] Try Derived Binders
+- [ ] Switch to Typescript
+- [ ] With fetched data
+- [ ] With router
+- [ ] With server side render
