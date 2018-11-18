@@ -18,6 +18,8 @@ https://github.com/thi-ng/umbrella
 
 
 Todo:
+[x] Set up Share app state using Context API
+[x] Use Cursors in state
 [] Fix Binder Meta Data on Inputs
 [] Try Derived Binders
 [] Switch to Typescript
