@@ -2,9 +2,13 @@ import React from "react";
 import { createBinder } from 'immutable-binder';
 
 
-class TextEditor extends React.Component {
+class TextInput extends React.Component {
     handleChange = (e) => {
-        this.props.binder.setValue(e.target.value);
+        if(typeof this.props.binder.getValue() === "number") {
+            this.props.binder.setValue(Number(e.target.value));
+        } else {
+            this.props.binder.setValue(e.target.value);
+        }
     }
 
     render() {
@@ -24,13 +28,11 @@ class TextEditor extends React.Component {
             </label>
         );
     }
-
 }
 
-const NumberEditor = ({label, binder}) => {
-    var stringBinder = binder;
+const NumberInput = ({label, binder}) => {
     return (
-        <TextEditor label={label} binder={stringBinder} type='number' />
+        <TextInput label={label} binder={binder} type='number' />
     );
 }
 
@@ -38,7 +40,7 @@ const NumberEditor = ({label, binder}) => {
 export class OrderForm extends React.Component {
     constructor(props) {
         super(props);
-        const formInitData = { name: "", quantity: 0, price: 0 };
+        const formInitData = { name: '', quantity: 0, price: 0 };
 
         this.state = {
             formInitData,
@@ -51,13 +53,9 @@ export class OrderForm extends React.Component {
         };
     }
 
-    handleChange = (newRootBinder) => {
-        this.setState({formBinder: this.validate(newRootBinder)});
-    }
-
     handleSubmit = (e) => {
         e.preventDefault();
-        if (e.target.querySelector('[data-haserrors=true]')) {
+        if (document.querySelector('[data-haserrors=true]')) {
             alert('There are errors in the form');
             return;
         }
@@ -66,14 +64,14 @@ export class OrderForm extends React.Component {
     }
 
     validate(binder) {
-        if (!binder.name.hasValue()) {
+        if (!binder.name.getValue()) {
             binder.name.updateExtrasInCurrentBinder({error: 'You must specify a product name'});
         }
-        if (!binder.price.hasValue()) {
-            binder.price.updateExtrasInCurrentBinder({error: 'You must specify a price'});
+        if (!binder.price.getValue()) {
+            binder.price.updateExtrasInCurrentBinder({error: 'You must specify a price. Nothing is free'});
         }
         var qty = binder.quantity.getValue();
-        if (qty <= 1 || qty >= 10) {
+        if (qty < 1 || qty >= 10) {
             binder.quantity.updateExtrasInCurrentBinder({error: 'Quantity must be between 1 and 10'});
         }
         return binder;
@@ -84,9 +82,9 @@ export class OrderForm extends React.Component {
 
         return (
             <form onSubmit={this.handleSubmit}>
-                <TextEditor label='Name' binder={formBinder.name}/>
-                <NumberEditor label='Quantity' binder={formBinder.quantity}/>
-                <NumberEditor label='Price' binder={formBinder.price}/>
+                <TextInput label='Name' binder={formBinder.name}/>
+                <NumberInput label='Quantity' binder={formBinder.quantity}/>
+                <NumberInput label='Price' binder={formBinder.price}/>
                 <button>Save</button>
             </form>
         );
