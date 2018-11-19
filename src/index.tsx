@@ -1,22 +1,25 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { createBinder } from 'immutable-binder';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { createPreInitializedBinder, ArrayBinder, binderMode } from 'immutable-binder';
 
 import { Order } from "./Order";
 
-const orderData = [
+export type OrderData = { name: String, quantity: number, price: number }
+const orderData: Array<OrderData> = [
     {name: "Burger", quantity: 2, price: 5.0},
     {name: "Salad", quantity: 1, price: 4.50},
     {name: "Coke", quantity: 3, price: 1.50}
 ];
 
 
-export const OrderContext = React.createContext();
+export type State = { orderBinder: ArrayBinder<OrderData, binderMode.PreInitializedMode> };
+export const OrderContext = React.createContext<State | null>(null);
 
-class App extends React.Component {
-    constructor(props) {
+
+class App extends React.Component<{}, State> {
+    constructor(props: {}) {
         super(props);
-        let orderBinder = createBinder(
+        let orderBinder = createPreInitializedBinder(
             orderData,
             orderBinder => {
                 this.setState({ orderBinder });

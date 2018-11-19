@@ -1,9 +1,10 @@
-import React from "react";
-import { createBinder } from 'immutable-binder';
+import * as React from "react";
+import { createBinder, Binder, binderMode } from 'immutable-binder';
 
+import { OrderData } from './index';
 
-class TextEditor extends React.Component {
-    handleChange = (e) => {
+class TextEditor extends React.Component<{binder: Binder<string>, label?: string, type?: string}, {}> {
+    handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         this.props.binder.setValue(e.target.value);
     }
 
@@ -14,7 +15,7 @@ class TextEditor extends React.Component {
 
         return (
             <label>
-                {label}
+                {label || ''}
                 <input type={type || 'text'} 
                     value={value} 
                     title={error} 
@@ -27,18 +28,19 @@ class TextEditor extends React.Component {
 
 }
 
-const NumberEditor = ({label, binder}) => {
+const NumberEditor: React.FC<{label: string, binder: Binder<number>}> = ({label, binder}) => {
     var stringBinder = binder;
     return (
         <TextEditor label={label} binder={stringBinder} type='number' />
     );
 }
 
-
-export class OrderForm extends React.Component {
-    constructor(props) {
+type Props = {orderBinder: Binder<OrderData, binderMode.PreInitializedMode>};
+type State = {formInitData: OrderData, formBinder: Binder<OrderData>};
+export class OrderForm extends React.Component<Props, State> {
+    constructor(props: Props) {
         super(props);
-        const formInitData = { name: "", quantity: 0, price: 0 };
+        const formInitData: OrderData = { name: "", quantity: 0, price: 0 };
 
         this.state = {
             formInitData,
@@ -51,13 +53,9 @@ export class OrderForm extends React.Component {
         };
     }
 
-    handleChange = (newRootBinder) => {
-        this.setState({formBinder: this.validate(newRootBinder)});
-    }
-
-    handleSubmit = (e) => {
+    handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (e.target.querySelector('[data-haserrors=true]')) {
+        if (document.querySelector('[data-haserrors=true]')) {
             alert('There are errors in the form');
             return;
         }

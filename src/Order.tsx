@@ -1,8 +1,10 @@
-import React, { Fragment } from "react";
-import { OrderForm } from './OrderForm';
-import { OrderContext } from './index';
+import * as React from "react";
+import { Fragment } from 'react';
 
-export class Item extends React.Component{
+import { OrderForm } from './OrderForm';
+import { OrderContext, OrderData } from './index';
+
+export class Item extends React.Component<OrderData, {}> {
     increase = () => {
         var quantity = this.props.item.quantity.getValue();
         this.props.item.quantity.setValue(quantity + 1);
@@ -25,14 +27,14 @@ export class Item extends React.Component{
 };
 
 
-export const Order = () => {
+export const Order: React.FC<{}> = () => {
 
     return(
         <OrderContext.Consumer>
-            {({ orderBinder }) => (
+            {(state) => (
                 <Fragment>
-                    <div>{orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
-                    <OrderForm orderBinder={orderBinder} />
+                    <div>{state.orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
+                    <OrderForm orderBinder={state.orderBinder} />
                 </Fragment>
             )}
         </OrderContext.Consumer>
