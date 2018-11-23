@@ -16,14 +16,21 @@ export const OrderContext = React.createContext();
 class App extends React.Component {
     constructor(props) {
         super(props);
-        let orderBinder = createBinder(
-            orderData,
+        const orderBinder = createBinder(
+            [],
             orderBinder => {
                 this.setState({ orderBinder });
             }
         );
 
         this.state = { orderBinder };
+    }
+
+    async componentWillMount() {
+        const res = await fetch('https://my-json-server.typicode.com/typicode/demo/posts');
+        const data = await res.json();
+        console.log(data, orderData);
+        this.state.orderBinder.setValue(orderData);
     }
 
     render() {
