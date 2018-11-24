@@ -1,40 +1,33 @@
-import React, { Fragment } from "react";
+import React, { useContext, Fragment } from "react";
 import { OrderForm } from './OrderForm';
 import { OrderContext } from './index';
 
-export class Item extends React.Component{
-    increase = () => {
-        var quantity = this.props.item.quantity.getValue();
-        this.props.item.quantity.setValue(quantity + 1);
+export const Item = ({ item }) => {
+    const increase = () => {
+        item.quantity.setValue(item.quantity.getValue() + 1);
+    }
+    const subTotal= () => {
+        return item.quantity.getValue() * item.price.getValue();
     }
 
-    subTotal= () => {
-        return this.props.item.quantity.getValue() * this.props.item.price.getValue();
-    }
-
-    render() {
-        return(
+    return(
         <div className="item" style={{ width: '150px', display: 'flex', justifyContent: 'space-between' }}>
-            <a href="#" onClick={this.increase}>+</a>
-            <span>{this.props.item.quantity.getValue()}</span>
-            <span>{this.props.item.name.getValue()}</span>
-            <span>${this.subTotal()}</span>
+            <a href="#" onClick={increase}>+</a>
+            <span>{item.quantity.getValue()}</span>
+            <span>{item.name.getValue()}</span>
+            <span>${subTotal()}</span>
         </div>
-        );
-    }
+    );
 };
 
 
 export const Order = () => {
+    const { orderBinder } = useContext(OrderContext);
 
     return(
-        <OrderContext.Consumer>
-            {({ orderBinder }) => (
-                <Fragment>
-                    <div>{orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
-                    <OrderForm orderBinder={orderBinder} />
-                </Fragment>
-            )}
-        </OrderContext.Consumer>
+        <Fragment>
+            <div>{orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
+            <OrderForm orderBinder={orderBinder} />
+        </Fragment>
     );
 };

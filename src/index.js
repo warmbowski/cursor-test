@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import { createBinder } from 'immutable-binder';
 
@@ -12,37 +12,36 @@ const orderData = [
 
 export const OrderContext = React.createContext();
 
+const App = () => {
+    const orderBinder = createBinder(
+        [],
+        orderBinder => {
+            setBinderStore({ orderBinder });
+        }
+    );
+    const [binderStore, setBinderStore] = useState({ orderBinder });
 
-class App extends React.Component {
-    constructor(props) {
-        super(props);
-        const orderBinder = createBinder(
-            [],
-            orderBinder => {
-                this.setState({ orderBinder });
-            }
-        );
-
-        this.state = { orderBinder };
-    }
-
-    async componentWillMount() {
+    const fetchData = async () => {
         const res = await fetch('https://my-json-server.typicode.com/typicode/demo/posts');
         const data = await res.json();
         console.log(data, orderData);
-        this.state.orderBinder.setValue(orderData);
+        binderStore.orderBinder.setValue(orderData);
     }
 
-    render() {
-        return (
-            <OrderContext.Provider value={ this.state }>
-                <section>
-                    <h1>Your Order:</h1>
-                    <Order />
-                </section>
-            </OrderContext.Provider>
-        )
-    }
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    console.log('render')
+    return (
+        <OrderContext.Provider value={ binderStore }>
+            <section>
+                <h1>Your Order:</h1>
+                <Order />
+            </section>
+        </OrderContext.Provider>
+    );
 }
+
 
 ReactDOM.render(<App />, document.getElementById("app"));
