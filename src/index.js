@@ -32,7 +32,7 @@ const App = () => {
         fetchData();
     }, []);
 
-    console.log('render')
+
     return (
         <OrderContext.Provider value={ binderStore }>
             <section>
