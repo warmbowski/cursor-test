@@ -1,54 +1,7 @@
 import React, { useState } from "react";
 import { createBinder } from 'immutable-binder';
 
-
-class TextInput extends React.Component {
-    handleChange = (e) => {
-        if(typeof this.props.binder.getValue() === "number") {
-            this.props.binder.setValue(Number(e.target.value));
-        } else {
-            this.props.binder.setValue(e.target.value);
-        }
-    }
-
-    render() {
-        var {binder, label, type} = this.props;
-        var value = binder.getValue();
-        var error = binder.getExtras().error;
-
-        return (
-            <label>
-                {label}
-                <input type={type || 'text'} 
-                    value={value} 
-                    title={error} 
-                    onChange={this.handleChange}
-                    data-haserrors={!!error}
-                />
-            </label>
-        );
-    }
-}
-
-const NumberInput = ({label, binder}) => {
-    return (
-        <TextInput label={label} binder={binder} type='number' />
-    );
-}
-
-const validateInputs = (binder) => {
-    if (!binder.name.getValue()) {
-        binder.name.updateExtrasInCurrentBinder({error: 'You must specify a product name'});
-    }
-    if (!binder.price.getValue()) {
-        binder.price.updateExtrasInCurrentBinder({error: 'You must specify a price. Nothing is free'});
-    }
-    var qty = binder.quantity.getValue();
-    if (qty < 1 || qty >= 10) {
-        binder.quantity.updateExtrasInCurrentBinder({error: 'Quantity must be between 1 and 10'});
-    }
-    return binder;
-}
+import { TextInput, NumberInput } from './Inputs';
 
 
 export const OrderForm = ({ orderBinder }) => {
@@ -71,6 +24,7 @@ export const OrderForm = ({ orderBinder }) => {
         state.setValue(formInitData);
     }
 
+
     return (
         <form onSubmit={handleSubmit}>
             <TextInput label='Name' binder={state.name}/>
@@ -79,4 +33,20 @@ export const OrderForm = ({ orderBinder }) => {
             <button>Save</button>
         </form>
     );
+}
+
+
+const validateInputs = (binder) => {
+    if (!binder.name.getValue()) {
+        binder.name.updateExtrasInCurrentBinder({error: 'You must specify a product name'});
+    }
+    if (!binder.price.getValue()) {
+        binder.price.updateExtrasInCurrentBinder({error: 'You must specify a price. Nothing is free'});
+    }
+    var qty = binder.quantity.getValue();
+    if (qty < 1 || qty >= 10) {
+        binder.quantity.updateExtrasInCurrentBinder({error: 'Quantity must be between 1 and 10'});
+    }
+
+    return binder;
 }
