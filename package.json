@@ -4,25 +4,31 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "parcel src/index.html"
+    "dev": "./node_modules/.bin/parcel src/index.html",
+    "build": "rimraf dist && yarn build:client && yarn build:server",
+    "build:client": "BABEL_ENV=client ./node_modules/.bin/parcel build src/index.html -d dist/client --public-url /dist",
+    "build:server": "BABEL_ENV=server ./node_modules/.bin/babel src -d dist --ignore __tests__",
+    "ssr": "node ./dist/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.16.4",
     "immutable-binder": "^2.0.0",
+    "path": "^0.12.7",
     "react": "next",
-    "react-binder": "^1.0.3",
     "react-dom": "next"
   },
   "devDependencies": {
+    "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
     "@babel/runtime": "^7.1.5",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "parcel-bundler": "^1.10.3"
+    "parcel-bundler": "^1.10.3",
+    "rimraf": "^2.6.2"
   }
 }
