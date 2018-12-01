@@ -5,7 +5,7 @@ import { OrderContext } from './App';
 
 export const Order = () => {
     const { orderBinder } = useContext(OrderContext);
-
+    if (!orderBinder) return <div>Loading...</div>
 
     return(
         <Fragment>

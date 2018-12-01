@@ -11,26 +11,43 @@ const orderData = [
 
 export const OrderContext = React.createContext();
 
-export const App = () => {
-    const orderBinder = createBinder(
-        [],
-        orderBinder => {
-            setBinderStore({ orderBinder });
+const useBinderStore = (initValue = {}) => {
+  const binder = createBinder(
+        initValue,
+        binderStore => {
+            setBinderStore(binderStore);
         }
     );
-    const [binderStore, setBinderStore] = useState({ orderBinder });
+  const [binderStore, setBinderStore] = useState(binder);
+  return binderStore;
+}
 
-    const fetchData = async () => {
-        const res = await fetch('https://my-json-server.typicode.com/typicode/demo/posts');
-        const data = await res.json();
-        console.log(data, orderData);
-        binderStore.orderBinder.setValue(orderData);
-    }
+// const fetchData = async (api) => {
+//     const res = await fetch(api);
+//     const data = await res.json();
+//     console.log(data, orderData);
+    
+// }
 
+const useApi = (apiUrl, name, binder, fakeData) => {
+    console.log(name);
     useEffect(() => {
-        fetchData();
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => binder.set(name, fakeData ? fakeData : data))
+        .catch(err => console.log(err));
     }, []);
 
+    return binder;
+};
+
+export const App = () => {
+    const binderStore = useBinderStore();
+    const orderApiUrl = 'https://my-json-server.typicode.com/typicode/demo/posts'
+    // useApi(orderApiUrl, 'postBinder', binderStore)
+    useApi(orderApiUrl, 'orderBinder', binderStore, orderData);
+
+    console.log(binderStore)
 
     return (
         <OrderContext.Provider value={ binderStore }>
