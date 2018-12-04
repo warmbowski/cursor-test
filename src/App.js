@@ -19,8 +19,8 @@ export const useBinderState = (initValue = {}) => {
           setBinderState(newRootBinder);
       }
   );
-  if (window) window.binder = binder;
   const [ binderState, setBinderState ] = useState(binder);
+  if (window) window.binder = binderState;
   return binderState;
 }
 

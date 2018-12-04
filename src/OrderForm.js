@@ -6,13 +6,15 @@ import { TextInput, NumberInput } from './Inputs';
 
 export const OrderForm = ({ orderBinder }) => {
     const formInitData = { name: '', quantity: 0, price: 0 };
-    const formBinder = validateInputs(createBinder(
+    const formBinder = createBinder(
         formInitData,
         formBinder => {
             setState(formBinder);
         }
-    ));
-    const [state, setState] = useState(formBinder);
+    );
+    if (window) window.formBinder = formBinder;
+    const formBinderWithMeta = validateInputs(formBinder);
+    const [state, setState] = useState(formBinderWithMeta);
 
     const handleSubmit = (e) => {
         e.preventDefault();
