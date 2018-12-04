@@ -4,13 +4,14 @@ import { OrderContext } from './App';
 
 
 export const Order = () => {
-    const { orderBinder } = useContext(OrderContext);
-    if (!orderBinder) return <div>Loading...</div>
+    const stateBinder = useContext(OrderContext);
+    if (!stateBinder.orderBinder) return <div>Loading...</div>
+    console.log(stateBinder.orderBinder)
 
     return(
         <Fragment>
-            <div>{orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
-            <OrderForm orderBinder={orderBinder} />
+            <div>{stateBinder.orderBinder.map((item, idx) => <Item key={idx} item={item} />)}</div>
+            <OrderForm orderBinder={stateBinder.orderBinder} />
         </Fragment>
     );
 };

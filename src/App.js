@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createBinder } from 'immutable-binder';
+// import Cortex from 'cortexjs';
 
 import { Order } from "./Order";
 
@@ -11,30 +12,23 @@ const orderData = [
 
 export const OrderContext = React.createContext();
 
-const useBinderStore = (initValue = {}) => {
+export const useBinderState = (initValue = {}) => {
   const binder = createBinder(
-        initValue,
-        binderStore => {
-            setBinderStore(binderStore);
-        }
-    );
-  const [binderStore, setBinderStore] = useState(binder);
-  return binderStore;
+      initValue,
+      (newRootBinder) => {
+          setBinderState(newRootBinder);
+      }
+  );
+  if (window) window.binder = binder;
+  const [ binderState, setBinderState ] = useState(binder);
+  return binderState;
 }
 
-// const fetchData = async (api) => {
-//     const res = await fetch(api);
-//     const data = await res.json();
-//     console.log(data, orderData);
-    
-// }
-
-const useApi = (apiUrl, name, binder, fakeData) => {
-    console.log(name);
+export const useApi = (apiUrl, name, rootBinder, fakeData) => {
     useEffect(() => {
       fetch(apiUrl)
         .then(res => res.json())
-        .then(data => binder.set(name, fakeData ? fakeData : data))
+        .then(data => rootBinder.set(name, fakeData ? fakeData : data))
         .catch(err => console.log(err));
     }, []);
 
@@ -42,15 +36,16 @@ const useApi = (apiUrl, name, binder, fakeData) => {
 };
 
 export const App = () => {
-    const binderStore = useBinderStore();
     const orderApiUrl = 'https://my-json-server.typicode.com/typicode/demo/posts'
-    // useApi(orderApiUrl, 'postBinder', binderStore)
-    useApi(orderApiUrl, 'orderBinder', binderStore, orderData);
+    const stateBinder = useBinderState();
+    useApi(orderApiUrl, 'orderBinder', stateBinder, orderData);
+    // const postBinder = useBinderState([]);
+    // useApi(orderApiUrl, 'postBinder', postBinder);
 
-    console.log(binderStore)
+    // const store = { orderBinder };
 
     return (
-        <OrderContext.Provider value={ binderStore }>
+        <OrderContext.Provider value={stateBinder}>
             <section>
                 <h1>Your Order:</h1>
                 <Order />
